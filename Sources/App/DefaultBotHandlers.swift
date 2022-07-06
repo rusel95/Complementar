@@ -77,7 +77,22 @@ final class DefaultBotHandlers {
         "Your smile is contagious",
         "You’re so in control of your own life",
         "I look up to you",
-        "You’re beautiful"
+        "You’re beautiful",
+        "They say that there are plenty of fish in the sea, but you are my perfect catch.",
+        "I’d rather spend time with you than anyone in the world.",
+        "You have cute elbows. For reals!",
+        "You make people want to stay wherever your heart is",
+        "I miss you even when you haven’t left yet",
+        "If someone wrote a book about you, it would be a bestseller",
+        "You’re the best at cuddling",
+        "You are the manifestation of sweet dreams",
+        "You make my insides jump around in the best way",
+        "You are alluring",
+        "Nobody in this world makes me happier than you do",
+        "You deserve the world",
+        "You know how to make people feel special. That is a gift.",
+        "Do you know why I wouldn’t ever compare you to a unicorn? It’s because you’re actually real.",
+        "You’re really something special."
     ]
     
     // MARK: - METHODS
@@ -93,7 +108,7 @@ final class DefaultBotHandlers {
 // MARK: - HELPERS
 
 private extension DefaultBotHandlers {
-
+    
     /// add handler for all messages except commands
     func defaultHandler(app: Vapor.Application, bot: TGBotPrtcl) {
         let handler = TGMessageHandler(filters: (.all && !.command.names(Command.allCases.map { $0.rawValue }) )) { update, bot in
@@ -112,14 +127,17 @@ private extension DefaultBotHandlers {
             
             self.isMakingComplements = true
             while self.isMakingComplements {
-                let randomTimeToSleep: UInt32 = UInt32.random(in: 3600...10000)
+                let randomTimeToSleep: UInt32 = UInt32.random(in: 7200...15000)
                 sleep(randomTimeToSleep)
-                try update.message?.reply(text: self.complements.randomElement() ?? "", bot: bot)
+                let currentHour = Calendar.current.component(.hour, from: Date())
+                if currentHour > 6 && currentHour < 19 {
+                    try update.message?.reply(text: self.complements.randomElement() ?? "", bot: bot)
+                }
             }
         }
         bot.connection.dispatcher.add(handler)
     }
-
+    
     /// add handler for command "/pause_love"
     func commandPauseHandler(app: Vapor.Application, bot: TGBotPrtcl) {
         let handler = TGCommandHandler(commands: [Command.pauseLove.rawValue]) { [weak self] update, bot in
